@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "562447175201",
+    "project_id": "dropchat-6e871",
+    "storage_bucket": "dropchat-6e871.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:562447175201:android:3e872fd8665ec77b7e9d60",
+        "android_client_info": {
+          "package_name": "com.example.dropchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "562447175201-vq6drh9k62fqen6urnob9fjsrmfpartm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dropchat",
+            "certificate_hash": "3f17d9818ef59914b08fb342a222d73349d3a6b2"
+          }
+        },
+        {
+          "client_id": "562447175201-ssb790l8l6r161l2be2hq0leh6uflsbn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlpEjPohgmn_nPp06mARbbwitSU9jwPXI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "562447175201-ssb790l8l6r161l2be2hq0leh6uflsbn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
