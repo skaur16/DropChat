@@ -15,8 +15,8 @@ import kotlinx.coroutines.tasks.await
 
 class ServerRepoImpl : ServerRepo {
 
-   val db = Firebase.firestore
-    val storageRef = Firebase.storage.reference
+   private val db = Firebase.firestore
+    private val storageRef = Firebase.storage.reference
 
 
     override suspend fun sendProfile(profile : Profile){

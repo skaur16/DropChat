@@ -74,6 +74,10 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    //auth
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
+    implementation("com.firebaseui:firebase-ui-auth:7.2.0")
+
     //Room db
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")
