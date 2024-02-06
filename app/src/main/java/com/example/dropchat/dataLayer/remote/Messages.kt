@@ -1,4 +1,4 @@
-package com.example.dropchat.data_layer.remote
+package com.example.dropchat.dataLayer.remote
 
 data class Messages(
     var messages : List<Message>

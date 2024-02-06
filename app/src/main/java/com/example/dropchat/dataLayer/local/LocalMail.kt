@@ -1,4 +1,4 @@
-package com.example.dropchat.data_layer.local
+package com.example.dropchat.dataLayer.local
 
 data class LocalMail(
     var mail : String // convert to mail type later
