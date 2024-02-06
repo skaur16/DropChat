@@ -100,4 +100,7 @@ dependencies {
     //imagepicker
     implementation("io.coil-kt:coil-compose:2.5.0")
 
+    //splash screen
+    implementation("androidx.core:core-splashscreen:1.0.0")
+
 }

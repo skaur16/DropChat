@@ -1,5 +1,6 @@
 package com.example.dropchat.domainLayer.remote
 
+import androidx.core.net.toUri
 import com.example.dropchat.dataLayer.remote.GroupMessage
 import com.example.dropchat.dataLayer.remote.GroupProfile
 import com.example.dropchat.dataLayer.remote.Message
@@ -23,6 +24,11 @@ class ServerRepoImpl : ServerRepo {
        db.collection("Profiles")
            .document(profile.userMail)
            .set(profile)
+
+
+        storageRef.child("Images/${profile.userMail}")
+            .putFile(profile.userImage.toUri())
+            .await()
 
    }
 
@@ -106,6 +112,10 @@ class ServerRepoImpl : ServerRepo {
         db.collection("Profiles")
             .document(groupProfile.groupName)
             .set(groupProfile)
+
+        storageRef.child("Images/${groupProfile.groupName}")
+            .putFile(groupProfile.groupDisplay.toUri())
+            .await()
     }
 
     override suspend fun getGroupInfo(groupName: String): GroupProfile? {

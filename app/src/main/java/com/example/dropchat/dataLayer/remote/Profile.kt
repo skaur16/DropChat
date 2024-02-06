@@ -7,5 +7,6 @@ data class Profile(
     var userMail : String,      // convert to mail type later..
     var userBio : String,
     //var userGender :    ,     // convert to Gender type later..
-    var userDob : Date
+    var userDob : Date,
+    var userImage : String
 )
