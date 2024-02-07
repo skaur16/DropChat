@@ -37,24 +37,34 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.dropchat.presentationLayer.MainViewModel
 import com.firebase.ui.auth.AuthUI
 import com.example.dropchat.ui.theme.DropChatTheme
 import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.EntryPoint
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
 
         Thread.sleep(3000)
         installSplashScreen()
 
         setContent {
+
+           val mainViewModel : MainViewModel
+
             DropChatTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+
 
                     val nav = rememberNavController()
                     NavHost(navController = nav, startDestination = "MainActivity") {
@@ -125,7 +135,6 @@ fun App(
                     Log.e("TAG", "FirebaseAuth :- ${user.photoUrl}")
                     Log.e("TAG", "FirebaseAuth :- ${user.providerId}")
                     Log.e("TAG", "FirebaseAuth :- ${user.uid}")
-
 
                 }
 

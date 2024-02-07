@@ -5,6 +5,11 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
     id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
+    //id("com.google.devtools.ksp")
+
+
+
 }
 
 android {
@@ -83,20 +88,10 @@ dependencies {
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
     // To use Kotlin annotation processing tool (kapt)
-    kapt("androidx.room:room-compiler:$room_version")
+    //kapt("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
 
-    //Dagger hilt
-    implementation("com.google.dagger:hilt-android:2.50")
-    kapt("com.google.dagger:hilt-compiler:2.50")
 
-    // For instrumentation tests
-    androidTestImplementation ("com.google.dagger:hilt-android-testing:2.50")
-    kaptAndroidTest("com.google.dagger:hilt-compiler:2.50")
-
-    // For local unit tests
-    testImplementation("com.google.dagger:hilt-android-testing:2.50")
-    kaptTest("com.google.dagger:hilt-compiler:2.50")
 
     //navigation
     val nav_version = "2.7.6"
@@ -106,5 +101,18 @@ dependencies {
 
     //splash screen
     implementation("androidx.core:core-splashscreen:1.0.0")
+
+
+    //dagger
+    implementation ("com.google.dagger:hilt-android:2.50")
+    kapt ("com.google.dagger:hilt-compiler:2.50")
+
+    // For instrumentation tests
+    androidTestImplementation  ("com.google.dagger:hilt-android-testing:2.50")
+    kaptAndroidTest ("com.google.dagger:hilt-compiler:2.50")
+
+    // For local unit tests
+    testImplementation ("com.google.dagger:hilt-android-testing:2.50")
+    kaptTest ("com.google.dagger:hilt-compiler:2.50")
 
 }
