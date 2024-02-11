@@ -2,7 +2,7 @@ package com.example.dropchat
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.drawable.Icon
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -10,53 +10,70 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.border
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.dropchat.presentationLayer.Chat
+import com.example.dropchat.presentationLayer.ListOfAllUsers
 import com.example.dropchat.presentationLayer.MainViewModel
+//import androidx.hilt.navigation.compose.hiltViewModel
+//import com.example.dropchat.presentationLayer.MainViewModel_HiltModules
+//import com.example.dropchat.presentationLayer.MainViewModel_HiltModules_KeyModule_ProvideFactory
+import com.example.dropchat.presentationLayer.UserProfile
 import com.firebase.ui.auth.AuthUI
 import com.example.dropchat.ui.theme.DropChatTheme
 import com.google.firebase.auth.FirebaseAuth
-import dagger.hilt.EntryPoint
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    lateinit var pickImage : ActivityResultLauncher<PickVisualMediaRequest>
+    lateinit var image : Uri
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        image = R.drawable.profileimage.toString().toUri()
+
+        pickImage = registerForActivityResult(ActivityResultContracts.PickVisualMedia())
+        {
+            if (it != null) {
+                image = it
+            }
+        }
 
 
         Thread.sleep(3000)
         installSplashScreen()
 
+        registerLoginLauncher()
         setContent {
 
-           val mainViewModel : MainViewModel
+           val mainViewModel : MainViewModel by viewModels()
+
+
+
+
+
+
+
+
 
             DropChatTheme {
                 // A surface container using the 'background' color from the theme
@@ -68,7 +85,10 @@ class MainActivity : ComponentActivity() {
 
                     val nav = rememberNavController()
                     NavHost(navController = nav, startDestination = "MainActivity") {
-                        composable("MainActivity"){ App(::launchLoginFlow , nav  )}
+                        composable("MainActivity"){ App(::launchLoginFlow , mainViewModel,nav )}
+                        composable("UserProfile"){ UserProfile(nav , mainViewModel ,pickImage ,image)}
+                        composable("ListOfAllUsers"){ ListOfAllUsers(mainViewModel , nav) }
+                        composable("ChatScreen"){ Chat(mainViewModel,nav) }
                     }
 
 
@@ -115,7 +135,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun App(
     launcherLoginFlow: (() -> Unit) -> Unit,
-    //mainViewModel: com.example.mychat.domainLayer.HiltViewModel,
+    mainViewModel: MainViewModel,
     nav: NavHostController
 ) {
 
@@ -138,7 +158,15 @@ fun App(
 
                 }
 
+                mainViewModel.profile.value = mainViewModel.profile.value.copy(
+                    userName = user?.displayName.toString(),
+                    userMail = user?.email.toString(),
+                )
+                mainViewModel.pickImage.value = user?.photoUrl.toString().toUri()
+                mainViewModel.name.value = user?.displayName.toString()
+                mainViewModel.currentUserId.value = user?.email.toString()
 
+                nav.navigate("UserProfile")
 
 
             }

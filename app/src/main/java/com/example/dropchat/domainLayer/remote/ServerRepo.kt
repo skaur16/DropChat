@@ -25,4 +25,6 @@ interface ServerRepo {
 
         suspend fun getGroupMessages(groupName : String) : GroupMessage?
 
+        suspend fun chatExist(uniqueId : String, uniqueIdReverse : String) : Boolean
+
 }

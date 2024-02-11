@@ -1,12 +1,12 @@
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
+
 
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
-    id("kotlin-kapt")
+
+    kotlin("kapt")
     id("com.google.dagger.hilt.android")
-    //id("com.google.devtools.ksp")
 
 
 
@@ -39,17 +39,17 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "1.8"
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.3"
     }
     packaging {
         resources {
@@ -100,19 +100,29 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.5.0")
 
     //splash screen
-    implementation("androidx.core:core-splashscreen:1.0.0")
+    implementation("androidx.core:core-splashscreen:1.0.1")
 
 
     //dagger
-    implementation ("com.google.dagger:hilt-android:2.50")
-    kapt ("com.google.dagger:hilt-compiler:2.50")
+   // implementation ("com.google.dagger:hilt-android:2.50")
+//    ksp ("com.google.dagger:hilt-compiler:2.50")
+//
+//    // For instrumentation tests
+//    androidTestImplementation  ("com.google.dagger:hilt-android-testing:2.50")
+//    kspAndroidTest ("com.google.dagger:hilt-compiler:2.50")
+//
+//    // For local unit tests
+//    testImplementation ("com.google.dagger:hilt-android-testing:2.50")
+//    kspTest (" com.google.dagger:hilt-compiler:2.50")
 
-    // For instrumentation tests
-    androidTestImplementation  ("com.google.dagger:hilt-android-testing:2.50")
-    kaptAndroidTest ("com.google.dagger:hilt-compiler:2.50")
 
-    // For local unit tests
-    testImplementation ("com.google.dagger:hilt-android-testing:2.50")
-    kaptTest ("com.google.dagger:hilt-compiler:2.50")
+    implementation("com.google.dagger:hilt-android:2.50")
+    kapt("com.google.dagger:hilt-android-compiler:2.50")
 
+    
+
+    implementation ("androidx.navigation:navigation-compose:2.7.6")
+}
+kapt {
+    correctErrorTypes = true
 }

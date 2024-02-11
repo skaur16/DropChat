@@ -1,5 +1,5 @@
 package com.example.dropchat.dataLayer.remote
 
 data class Messages(
-    var messages : List<Message> = listOf()
+    var Messages : List<Message> = listOf()
 )

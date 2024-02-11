@@ -10,7 +10,6 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import io.grpc.Context.Storage
 import kotlinx.coroutines.tasks.await
 
 class ServerRepoImpl : ServerRepo {
@@ -26,10 +25,15 @@ class ServerRepoImpl : ServerRepo {
            .set(profile)
 
 
-        storageRef.child("Images/${profile.userMail}")
-            .putFile(profile.userImage.toUri())
-            .await()
 
+
+        /*storageRef.child("Images/${profile.userMail}")
+            .putFile(profile.userImage.toUri())
+            .addOnSuccessListener {
+                Log.e("Child","Uploaded ")
+            }
+            .await()
+*/
    }
 
     override suspend fun getProfiles(): List<Profile> {
@@ -40,7 +44,7 @@ class ServerRepoImpl : ServerRepo {
             .toObjects(Profile::class.java)
     }
 
-    override suspend fun sendMessage(uniqueId: String, uniqueIdReverse : String,message: Message) {
+    override suspend fun sendMessage(uniqueId: String, uniqueIdReverse : String, message: Message ) {
 
         val doc = db.collection("Chats")
                     .document(uniqueId)
@@ -57,12 +61,18 @@ class ServerRepoImpl : ServerRepo {
             db.collection("Chats")
                 .document(uniqueId)
                 .update("Messages", FieldValue.arrayUnion(message))
+
+            /*db.collection("Chats")
+                .document(uniqueId)
+                .set()
+*/
         }
 
         else if(doc2.exists()){
             db.collection("Chats")
-                .document(uniqueId)
+                .document(uniqueIdReverse)
                 .update("Messages", FieldValue.arrayUnion(message))
+
         }
 
         else{
@@ -94,7 +104,7 @@ class ServerRepoImpl : ServerRepo {
 
         else if(doc2.exists()){
             return db.collection("Chats")
-                .document(uniqueId)
+                .document(uniqueIdReverse)
                 .get()
                 .await()
                 .toObject(Messages()::class.java)!!
@@ -165,5 +175,30 @@ class ServerRepoImpl : ServerRepo {
         else{
             return null
         }
+    }
+
+    override suspend fun chatExist(uniqueId: String, uniqueIdReverse: String): Boolean {
+
+        var doc1 = db.collection("Chats")
+            .document(uniqueId)
+            .get()
+            .await()
+
+        var doc2 = db.collection("Chats")
+            .document(uniqueIdReverse)
+            .get()
+            .await()
+
+        if(doc1.exists()){
+            return true
+        }
+        else if(doc2.exists()){
+            return true
+        }
+
+        else{
+            return false
+        }
+
     }
 }

@@ -1,14 +1,15 @@
-package com.example.dropchat.domainLayer.remote.di
+package com.example.dropchat.di
 
 import com.example.dropchat.domainLayer.remote.ServerRepo
 import com.example.dropchat.domainLayer.remote.ServerRepoImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
-@InstallIn(Singleton::class)
+@InstallIn(SingletonComponent::class)
 object AppModule {
 
     @Singleton
