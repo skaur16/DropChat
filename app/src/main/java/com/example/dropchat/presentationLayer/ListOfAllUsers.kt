@@ -17,6 +17,7 @@ import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.dropchat.dataLayer.remote.Profile
+import com.example.dropchat.ui.Screens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,7 +56,7 @@ fun profileCard(profile : Profile,
     Card (
         modifier = Modifier.clickable {
             mainViewModel.friendUserId.value = profile.userMail
-            nav.navigate("ChatScreen")
+            nav.navigate(Screens.ChatScreen.name)
         }
     )
 

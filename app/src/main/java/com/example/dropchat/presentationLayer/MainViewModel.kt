@@ -15,6 +15,8 @@ import com.example.dropchat.dataLayer.remote.Messages
 import com.example.dropchat.dataLayer.remote.Profile
 import com.example.dropchat.domainLayer.remote.ServerRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
@@ -43,8 +45,9 @@ class MainViewModel @Inject constructor(
 
     var currentUserId = mutableStateOf("")
     var friendUserId = mutableStateOf("")
-    var uniqueId =mutableStateOf( "${currentUserId} and ${friendUserId}")
-    var uniqueIdReverse = mutableStateOf("${friendUserId} and ${currentUserId}")
+    var uniqueId = "${currentUserId.value} and ${friendUserId.value}"
+    var uniqueIdReverse = "${friendUserId.value} and ${currentUserId.value}"
+    var chatExist = mutableStateOf<Boolean>(false)
 
 
     fun sendProfile() {
@@ -85,27 +88,48 @@ class MainViewModel @Inject constructor(
         }
 
     }
-    fun getMessages(){
-        viewModelScope.launch {
-            serverRepoRef.getMessages(uniqueId.value,uniqueIdReverse.value).also{
+   suspend fun getMessages(){
+
+
+
+        viewModelScope.async(Dispatchers.Main){
+            serverRepoRef.getMessages(
+                "${currentUserId.value} and ${friendUserId.value}",
+                "${friendUserId.value} and ${currentUserId.value}"
+            ).also{
                 if (it != null) {
                     listOfMessages.value = it
                 Log.e("List",it.toString())
                 }
+
             }
-        }
+        }.await()
     }
      fun sendMessage(){
          viewModelScope.launch {
-             Log.e("MSG",uniqueId.value)
+             Log.e("MSG",uniqueId)
 
 
 
-             serverRepoRef.sendMessage(uniqueId.value,
-                                uniqueIdReverse.value,
+             serverRepoRef.sendMessage(
+                 "${currentUserId.value} and ${friendUserId.value}",
+                 "${friendUserId.value} and ${currentUserId.value}",
                                 message.value
                  )
          }
      }
+
+    fun chatExist() {
+        viewModelScope.launch {
+             serverRepoRef.chatExist(
+                 "${currentUserId.value} and ${friendUserId.value}",
+                 "${friendUserId.value} and ${currentUserId.value}",
+             ).also {
+                 chatExist.value = it
+                 Log.e("VM",it.toString())
+             }
+        }
+
+    }
 }
 

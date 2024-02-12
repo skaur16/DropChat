@@ -192,13 +192,8 @@ class ServerRepoImpl : ServerRepo {
         if(doc1.exists()){
             return true
         }
-        else if(doc2.exists()){
-            return true
-        }
+        else return doc2.exists()
 
-        else{
-            return false
-        }
 
     }
 }

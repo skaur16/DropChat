@@ -30,12 +30,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.dropchat.presentationLayer.Chat
+import com.example.dropchat.presentationLayer.Chats
 import com.example.dropchat.presentationLayer.ListOfAllUsers
 import com.example.dropchat.presentationLayer.MainViewModel
 //import androidx.hilt.navigation.compose.hiltViewModel
 //import com.example.dropchat.presentationLayer.MainViewModel_HiltModules
 //import com.example.dropchat.presentationLayer.MainViewModel_HiltModules_KeyModule_ProvideFactory
 import com.example.dropchat.presentationLayer.UserProfile
+import com.example.dropchat.ui.Screens
 import com.firebase.ui.auth.AuthUI
 import com.example.dropchat.ui.theme.DropChatTheme
 import com.google.firebase.auth.FirebaseAuth
@@ -84,11 +86,12 @@ class MainActivity : ComponentActivity() {
 
 
                     val nav = rememberNavController()
-                    NavHost(navController = nav, startDestination = "MainActivity") {
-                        composable("MainActivity"){ App(::launchLoginFlow , mainViewModel,nav )}
-                        composable("UserProfile"){ UserProfile(nav , mainViewModel ,pickImage ,image)}
-                        composable("ListOfAllUsers"){ ListOfAllUsers(mainViewModel , nav) }
-                        composable("ChatScreen"){ Chat(mainViewModel,nav) }
+                    NavHost(navController = nav, startDestination = Screens.MainActivity.name) {
+                        composable(Screens.MainActivity.name){ App(::launchLoginFlow , mainViewModel,nav )}
+                        composable(Screens.UserProfile.name){ UserProfile(nav , mainViewModel ,pickImage ,image)}
+                        composable(Screens.ListOfAllUsers.name){ ListOfAllUsers(mainViewModel , nav) }
+                        composable(Screens.ChatScreen.name){ Chat(mainViewModel,nav) }
+                        composable(Screens.Chats.name){ Chats(mainViewModel,nav) }
                     }
 
 
@@ -166,7 +169,7 @@ fun App(
                 mainViewModel.name.value = user?.displayName.toString()
                 mainViewModel.currentUserId.value = user?.email.toString()
 
-                nav.navigate("UserProfile")
+                nav.navigate(Screens.UserProfile.name)
 
 
             }

@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.example.dropchat.ui.Screens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -131,11 +132,16 @@ fun UserProfile(
 
                     mainViewModel.sendProfile()
 
-                    nav.navigate("ListOfAllUsers")
+                    nav.navigate(Screens.ListOfAllUsers.name)
 
 
                 }) {
                     Text(text = "Save")
+                }
+            }
+            Row(){
+                Button(onClick = { nav.navigate(Screens.Chats.name) }) {
+                    Text(text = "View Chats")
                 }
             }
 

@@ -25,6 +25,7 @@ fun Chat(
     mainViewModel: MainViewModel,
     nav: NavHostController
 ) {
+
     Column {
         TopAppBar(title = {
             Text(text = "My Chat")
@@ -40,12 +41,16 @@ fun Chat(
         }*/
 
         LazyColumn() {
-            mainViewModel.getMessages()
 
-            items(mainViewModel.listOfMessages.value.Messages) {
-                mainViewModel.lastMessage.value = mainViewModel.listOfMessages.value.Messages.last().toString()
-                Card() {
+           // mainViewModel.getMessages()
+
+            items(mainViewModel.listOfMessages.value.Messages)
+            {
+              //  mainViewModel.lastMessage.value = mainViewModel.listOfMessages.value.Messages.last().toString()
+                Card()
+        {
                     Text(text = it.message )
+
                 }
             }
         }
