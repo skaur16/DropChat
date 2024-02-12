@@ -60,12 +60,12 @@ class MainViewModel @Inject constructor(
 
 
 
-    fun getAllProfiles(){
-        viewModelScope.launch {
+    suspend fun getAllProfiles(){
+        viewModelScope.async(Dispatchers.Main){
             serverRepoRef.getProfiles().also{
                 listOfAllUsers.value = it.toMutableList()
             }
-        }
+        }.await()
 
     }
    suspend fun getMessages(){

@@ -1,5 +1,6 @@
 package com.example.dropchat.presentationLayer
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -21,7 +23,10 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.dropchat.dataLayer.remote.Profile
 import com.example.dropchat.ui.Screens
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListOfAllUsers(
@@ -29,17 +34,21 @@ fun ListOfAllUsers(
     nav : NavHostController
 ) {
 
-    mainViewModel.getAllProfiles()
+    val  scope = rememberCoroutineScope()
+
+    scope.launch(Dispatchers.Main) {
+        mainViewModel.getAllProfiles()
+    }
 
         Column {
 
 
             TopAppBar(title = {
                 Text(text = "All Users")
-                TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color.Cyan
-                )
-            })
+            },
+                colors = TopAppBarDefaults.smallTopAppBarColors(
+                    containerColor = Color.LightGray
+                ))
 
 
             LazyColumn() {
@@ -67,7 +76,9 @@ fun profileCard(profile : Profile,
         Row(){
             AsyncImage(model = profile.userImage.toUri(),
                 contentDescription = "Img",
-                modifier = Modifier.width(40.dp).height(40.dp)
+                modifier = Modifier
+                    .width(40.dp)
+                    .height(40.dp)
                 )
 
             Text(text=profile.userName)
