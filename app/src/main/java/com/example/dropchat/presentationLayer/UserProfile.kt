@@ -1,10 +1,16 @@
 package com.example.dropchat.presentationLayer
 
+import android.app.Application
+import android.app.DatePickerDialog
 import android.net.Uri
 import android.util.Log
+import android.widget.Button
+import android.widget.DatePicker
+import android.widget.EditText
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,19 +27,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.dropchat.ui.Screens
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserProfile(
     nav: NavHostController,
     mainViewModel: MainViewModel,
-    pickImage: ActivityResultLauncher<PickVisualMediaRequest>,
-    image: Uri
+    pickImage: ActivityResultLauncher<PickVisualMediaRequest>
+
 ) {
 
     Column() {
@@ -53,15 +61,16 @@ fun UserProfile(
                     .height(100.dp)
             ) {
 
-                Img(mainViewModel.pickImage.value.toString().toUri())
+                mainViewModel.pickImage.value?.let {
+                    Img(it)
+                }
 
             }
             Button(onClick = {
-                //pickImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                pickImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
 
-                //mainViewModel.pickImage.value = image
                 Log.e("Img", mainViewModel.pickImage.value.toString())
-                //Log.e("Img", image.toString())
+
 
             }) {
                 Text(text = "Upload picture")
@@ -112,9 +121,36 @@ fun UserProfile(
             }
 
             Row() {
-                Button(onClick = { mainViewModel.datePicker() }) {
-                    Text(text = "DOB")
+                var context = LocalContext.current
+                var date: Int
+                var month: Int
+                var year: Int
+
+                var calender = Calendar.getInstance()
+                date = calender.get(Calendar.DAY_OF_MONTH)
+                month = calender.get(Calendar.MONTH)
+                year = calender.get(Calendar.YEAR)
+
+                val datePicker = DatePickerDialog(
+                    context,
+                    { _: DatePicker, year: Int, month: Int, date: Int ->
+                        mainViewModel.dob.value = "${date}/${month+1}/${year}"
+                    }, year, month, date
+                )
+
+                Column {
+
+
+                    TextField(value = mainViewModel.dob.value,
+                        onValueChange = {},
+                        label = { Text(text = "DOB") }
+                    )
+                    Button(onClick = { datePicker.show() }) {
+                        Text(text = "Datepicker")
+                    }
                 }
+
+
 
 
             }
@@ -132,18 +168,14 @@ fun UserProfile(
 
                     mainViewModel.sendProfile()
 
-                    nav.navigate(Screens.ListOfAllUsers.name)
+                    nav.navigate(Screens.Chats.name)
 
 
                 }) {
                     Text(text = "Save")
                 }
             }
-            Row(){
-                Button(onClick = { nav.navigate(Screens.Chats.name) }) {
-                    Text(text = "View Chats")
-                }
-            }
+
 
 
         }

@@ -46,19 +46,22 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    lateinit var pickImage : ActivityResultLauncher<PickVisualMediaRequest>
-    lateinit var image : Uri
+    val mainViewModel : MainViewModel by viewModels()
+
+    val pickImage = registerForActivityResult(ActivityResultContracts.PickVisualMedia())
+    {
+        if (it != null) {
+            mainViewModel.pickImage.value = it
+        }
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        image = R.drawable.profileimage.toString().toUri()
 
-        pickImage = registerForActivityResult(ActivityResultContracts.PickVisualMedia())
-        {
-            if (it != null) {
-                image = it
-            }
-        }
+
+
 
 
         Thread.sleep(3000)
@@ -66,16 +69,6 @@ class MainActivity : ComponentActivity() {
 
         registerLoginLauncher()
         setContent {
-
-           val mainViewModel : MainViewModel by viewModels()
-
-
-
-
-
-
-
-
 
             DropChatTheme {
                 // A surface container using the 'background' color from the theme
@@ -88,7 +81,7 @@ class MainActivity : ComponentActivity() {
                     val nav = rememberNavController()
                     NavHost(navController = nav, startDestination = Screens.MainActivity.name) {
                         composable(Screens.MainActivity.name){ App(::launchLoginFlow , mainViewModel,nav )}
-                        composable(Screens.UserProfile.name){ UserProfile(nav , mainViewModel ,pickImage ,image)}
+                        composable(Screens.UserProfile.name){ UserProfile(nav , mainViewModel ,pickImage)}
                         composable(Screens.ListOfAllUsers.name){ ListOfAllUsers(mainViewModel , nav) }
                         composable(Screens.ChatScreen.name){ Chat(mainViewModel,nav) }
                         composable(Screens.Chats.name){ Chats(mainViewModel,nav) }

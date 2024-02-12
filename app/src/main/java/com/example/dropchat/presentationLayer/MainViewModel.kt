@@ -35,9 +35,10 @@ class MainViewModel @Inject constructor(
     var pickImage = mutableStateOf<Uri?>(null)
     var name = mutableStateOf("")
     var bio = mutableStateOf("")
-    var dob = mutableStateOf("")
+    var dob = mutableStateOf("01/01/1970")
     var genderSelected = mutableStateOf(gender.value.male)
     var messageText = mutableStateOf("")
+
 
 
     var listOfAllUsers = mutableStateOf( mutableListOf(Profile()))
@@ -57,28 +58,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun datePicker(){
-        viewModelScope.launch {
-            var date: Int
-            var month: Int
-            var year: Int
 
-            var calender = Calendar.getInstance()
-            date = calender.get(Calendar.DAY_OF_MONTH)
-            month = calender.get(Calendar.MONTH)
-            year = calender.get(Calendar.YEAR)
-
-            val datePicker = DatePickerDialog(
-                Application(),
-                { _: DatePicker, year: Int, month: Int, date: Int ->
-                    dob.value = "${date}/${month}/${year}"
-                }, year, month, date
-            )
-
-
-            datePicker.show()
-        }
-    }
 
     fun getAllProfiles(){
         viewModelScope.launch {

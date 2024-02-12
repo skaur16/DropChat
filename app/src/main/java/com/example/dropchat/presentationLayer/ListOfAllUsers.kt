@@ -3,6 +3,8 @@ package com.example.dropchat.presentationLayer
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
@@ -13,6 +15,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
@@ -63,7 +66,9 @@ fun profileCard(profile : Profile,
     {
         Row(){
             AsyncImage(model = profile.userImage.toUri(),
-                contentDescription = "Img")
+                contentDescription = "Img",
+                modifier = Modifier.width(40.dp).height(40.dp)
+                )
 
             Text(text=profile.userName)
 
