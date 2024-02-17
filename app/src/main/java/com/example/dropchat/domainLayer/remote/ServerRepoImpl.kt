@@ -123,9 +123,11 @@ class ServerRepoImpl : ServerRepo {
             .document(groupProfile.groupName)
             .set(groupProfile)
 
-        storageRef.child("Images/${groupProfile.groupName}")
+       /* storageRef.child("Images/${groupProfile.groupName}")
             .putFile(groupProfile.groupDisplay.toUri())
             .await()
+
+        */
     }
 
     override suspend fun getGroupInfo(groupName: String): GroupProfile? {

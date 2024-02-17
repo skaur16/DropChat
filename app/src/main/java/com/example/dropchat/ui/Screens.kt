@@ -7,6 +7,7 @@ enum class Screens {
     ListOfAllUsers,
     ChatScreen,
     Chats,
-    UserInfo
+    UserInfo,
+    GroupProfileScreen
 
 }

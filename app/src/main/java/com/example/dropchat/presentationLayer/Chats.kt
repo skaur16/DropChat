@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,6 +48,11 @@ fun Chats(mainViewModel: MainViewModel,nav: NavHostController) {
 
      val scope = rememberCoroutineScope()
 
+    LaunchedEffect(key1 = Unit){
+            mainViewModel.getAllProfiles()
+           mainViewModel.chatExist()
+    }
+
     Column {
         TopAppBar(title = {
             Text(text = "Chats")
@@ -67,23 +73,25 @@ fun Chats(mainViewModel: MainViewModel,nav: NavHostController) {
             )
 
         LazyColumn() {
-            scope.launch (Dispatchers.Main) {
-                mainViewModel.getAllProfiles()
-            }
+
+
+            //Approach 
 
             items(mainViewModel.listOfAllUsers.value) {
 
+                Log.e("ABC", "Inside Chat Screen")
+
                 mainViewModel.friendUserId.value = it.userMail
-                mainViewModel.chatExist()
+
 
                 if (mainViewModel.chatExist.value) {
+                Log.e("ABC", "Inside Chat Screen -> chatExist.value")
 
-                    scope.launch(Dispatchers.Main)
+                    scope.launch(Dispatchers.IO)
                     {
-                        withContext(Dispatchers.Main)
-                        {
-                            mainViewModel.getMessages()
-                        }
+                        mainViewModel.getMessages()
+                    Log.e("ABC", "Inside Chat Screen -> getMessages()")
+
                         mainViewModel.lastMessage.value =
                             mainViewModel.listOfMessages.value.Messages.last().message
                     }
@@ -115,7 +123,9 @@ fun Chats(mainViewModel: MainViewModel,nav: NavHostController) {
                     }
                     Row {
 
-                        IconButton(onClick = { /*TODO*/ }) {
+                        IconButton(onClick = {
+                            nav.navigate(Screens.GroupProfileScreen.name)
+                        }) {
                             Icon(painter = painterResource(R.drawable.group),
                                 contentDescription = "Group")
                         }

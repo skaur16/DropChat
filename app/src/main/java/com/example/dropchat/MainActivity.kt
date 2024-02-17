@@ -35,6 +35,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.dropchat.presentationLayer.Chat
 import com.example.dropchat.presentationLayer.Chats
+import com.example.dropchat.presentationLayer.GroupProfile
 import com.example.dropchat.presentationLayer.ListOfAllUsers
 import com.example.dropchat.presentationLayer.MainViewModel
 import com.example.dropchat.presentationLayer.UserInfo
@@ -58,6 +59,11 @@ class MainActivity : ComponentActivity() {
         if (it != null) {
             mainViewModel.pickImage.value = it
         }
+    }
+
+    val groupImg = registerForActivityResult(ActivityResultContracts.PickVisualMedia())
+    {
+    mainViewModel.groupImage.value = it
     }
 
 
@@ -108,6 +114,7 @@ class MainActivity : ComponentActivity() {
                         composable(Screens.ChatScreen.name) { Chat(mainViewModel, nav) }
                         composable(Screens.Chats.name) { Chats(mainViewModel, nav) }
                         composable(Screens.UserInfo.name) { UserInfo(mainViewModel , nav  ) }
+                        composable(Screens.GroupProfileScreen.name) { GroupProfile(mainViewModel ,nav ,groupImg) }
 
                     }
 

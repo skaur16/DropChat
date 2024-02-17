@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dropchat.dataLayer.remote.Gender
+import com.example.dropchat.dataLayer.remote.GroupProfile
 import com.example.dropchat.dataLayer.remote.LastMessage
 import com.example.dropchat.dataLayer.remote.Message
 import com.example.dropchat.dataLayer.remote.Messages
@@ -30,6 +31,8 @@ class MainViewModel @Inject constructor(
     var gender = mutableStateOf(Gender())
     var message = mutableStateOf(Message())
     var listOfMessages = mutableStateOf(Messages())
+    var groupProfile = mutableStateOf(GroupProfile())
+
     var lastMessage = mutableStateOf("")
 
     var pickImage = mutableStateOf<Uri?>(null)
@@ -38,6 +41,12 @@ class MainViewModel @Inject constructor(
     var dob = mutableStateOf("01/01/1970")
     var genderSelected = mutableStateOf(gender.value.male)
     var messageText = mutableStateOf("")
+
+    var groupImage = mutableStateOf<Uri?>(null)
+    var groupName = mutableStateOf("")
+    var groupBio = mutableStateOf("")
+    var groupMembers = mutableStateOf(mutableListOf(Profile()))
+    var isChecked = mutableStateOf<Boolean>(false)
 
 
 
@@ -109,7 +118,14 @@ class MainViewModel @Inject constructor(
                  Log.e("VM",it.toString())
              }
         }
+    }
 
+    fun sendGroupInfo(){
+        viewModelScope.launch {
+            serverRepoRef.sendGroupInfo(groupProfile.value).also {
+                Log.e("Group",groupProfile.value.toString())
+            }
+        }
     }
 }
 
