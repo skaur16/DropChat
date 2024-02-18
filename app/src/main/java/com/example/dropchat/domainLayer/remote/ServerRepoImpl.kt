@@ -1,6 +1,7 @@
 package com.example.dropchat.domainLayer.remote
 
 import androidx.core.net.toUri
+import com.example.dropchat.dataLayer.remote.Channel
 import com.example.dropchat.dataLayer.remote.GroupMessage
 import com.example.dropchat.dataLayer.remote.GroupProfile
 import com.example.dropchat.dataLayer.remote.Message
@@ -44,7 +45,8 @@ class ServerRepoImpl : ServerRepo {
             .toObjects(Profile::class.java)
     }
 
-    override suspend fun sendMessage(uniqueId: String, uniqueIdReverse : String, message: Message ) {
+    override suspend fun sendMessage(uniqueId: String, uniqueIdReverse : String, channel : Channel,message: Message)
+    {
 
         val doc = db.collection("Chats")
                     .document(uniqueId)
@@ -58,31 +60,30 @@ class ServerRepoImpl : ServerRepo {
 
 
         if(doc.exists()){
+
+
             db.collection("Chats")
                 .document(uniqueId)
-                .update("Messages", FieldValue.arrayUnion(message))
-
-            /*db.collection("Chats")
-                .document(uniqueId)
-                .set()
-*/
+                .update("messages", FieldValue.arrayUnion(message))
         }
 
         else if(doc2.exists()){
+
+
             db.collection("Chats")
                 .document(uniqueIdReverse)
-                .update("Messages", FieldValue.arrayUnion(message))
+                .update("messages", FieldValue.arrayUnion(message))
 
         }
 
         else{
             db.collection("Chats")
                 .document(uniqueId)
-                .set(hashMapOf("Messages" to message))
+                .set(channel)
         }
     }
 
-    override suspend fun getMessages(uniqueId: String, uniqueIdReverse : String): Messages? {
+    override suspend fun getMessages(uniqueId: String, uniqueIdReverse : String): Channel? {
 
         val doc = db.collection("Chats")
             .document(uniqueId)
@@ -99,7 +100,7 @@ class ServerRepoImpl : ServerRepo {
                 .document(uniqueId)
                 .get()
                 .await()
-                .toObject(Messages::class.java)!!
+                .toObject(Channel::class.java)!!
         }
 
         else if(doc2.exists()){
@@ -107,7 +108,7 @@ class ServerRepoImpl : ServerRepo {
                 .document(uniqueIdReverse)
                 .get()
                 .await()
-                .toObject(Messages()::class.java)!!
+                .toObject(Channel::class.java)!!
         }
 
         else{

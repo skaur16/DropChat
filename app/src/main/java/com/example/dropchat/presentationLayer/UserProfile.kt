@@ -191,7 +191,8 @@ fun UserProfile(
 
                     mainViewModel.sendProfile()
 
-                    nav.navigate(Screens.Chats.name)
+                    //nav.navigate(Screens.Chats.name)
+                    nav.navigate(Screens.ListOfAllUsers.name)
 
 
                 }) {

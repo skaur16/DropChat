@@ -18,10 +18,15 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
+import com.example.dropchat.dataLayer.remote.Message
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,71 +35,87 @@ fun Chat(
     nav: NavHostController
 ) {
 
+    val scope = rememberCoroutineScope()
+
     Column {
-        TopAppBar(title = {
-            Text(text = "My Chat")
-        },
+        TopAppBar(
+            title = {
+                Text(text = "My Chat")
+            },
             colors = TopAppBarDefaults.smallTopAppBarColors(
                 containerColor = Color.LightGray
             )
-            )
-
-       /* Button(onClick = {
-
-        }) {
-            Text(text = "Get messages")
-        }*/
-
-        LazyColumn() {
-
-           // mainViewModel.getMessages()
-
-            items(mainViewModel.listOfMessages.value.Messages)
-            {
-              //  mainViewModel.lastMessage.value = mainViewModel.listOfMessages.value.Messages.last().toString()
-                Card()
-        {
-                    Text(text = it.message )
-
-                }
-            }
-        }
-    }
-    Row(
-        verticalAlignment = Alignment.Bottom,
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
-        /*Button(onClick = {
-
-        }) {
-            Text(text = "Image")
-        }*/
-        TextField(value = mainViewModel.messageText.value,
-            onValueChange = {
-                mainViewModel.messageText.value = it
-            },
-            maxLines = 30,
-            modifier = Modifier.weight(0.7F,true)
-
         )
 
+        /* Button(onClick = {
 
+         }) {
+             Text(text = "Get messages")
+         }*/
 
-        IconButton(onClick = {
-            mainViewModel.message.value = mainViewModel.message.value.copy(
-                message = mainViewModel.messageText.value,
+        LazyColumn() {
+            scope.launch(Dispatchers.IO) {
+                mainViewModel.getMessages().also {
+                    mainViewModel.listOfMessages.value.Messages =
+                        mainViewModel.channel.value.messages
+                }
+            }
+            items(mainViewModel.listOfMessages.value.Messages) {
+                Text(text = it.message)
+            }
+
+        }
+    }
+
+        Row(
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            /*Button(onClick = {
+
+            }) {
+                Text(text = "Image")
+            }*/
+            TextField(
+                value = mainViewModel.messageText.value,
+                onValueChange = {
+                    mainViewModel.messageText.value = it
+                },
+                maxLines = 30,
+                modifier = Modifier.weight(0.7F, true)
+
             )
 
 
-            mainViewModel.sendMessage()
-            mainViewModel.messageText.value = ""
-        }) {
-            Icon(imageVector = Icons.Default.Send,
-                contentDescription = "Send")
-        }
 
+            IconButton(onClick = {
+                mainViewModel.channel.value = mainViewModel.channel.value.copy(
+                    messages = listOf(
+                        Message(
+                            message = mainViewModel.messageText.value
+                        )
+                    ),
+                    senderId = mainViewModel.friendUserId.value
+                )
+
+                mainViewModel.message.value = mainViewModel.message.value.copy(
+                    message = mainViewModel.messageText.value
+                )
+
+                mainViewModel.sendMessage()
+                mainViewModel.messageText.value = ""
+            }) {
+                Icon(
+                    imageVector = Icons.Default.Send,
+                    contentDescription = "Send"
+                )
+            }
+
+        }
     }
-}
+
+
+
 
 
 

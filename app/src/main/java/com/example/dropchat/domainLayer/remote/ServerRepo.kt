@@ -1,5 +1,6 @@
 package com.example.dropchat.domainLayer.remote
 
+import com.example.dropchat.dataLayer.remote.Channel
 import com.example.dropchat.dataLayer.remote.GroupMessage
 import com.example.dropchat.dataLayer.remote.GroupProfile
 import com.example.dropchat.dataLayer.remote.Message
@@ -13,9 +14,9 @@ interface ServerRepo {
 
         suspend fun getProfiles() : List<Profile>
 
-        suspend fun sendMessage(uniqueId : String ,uniqueIdReverse : String, message : Message)
+        suspend fun sendMessage(uniqueId : String ,uniqueIdReverse : String, channel: Channel, message: Message)
 
-        suspend fun getMessages(uniqueId : String,uniqueIdReverse : String) : Messages?
+        suspend fun getMessages(uniqueId : String,uniqueIdReverse : String) : Channel?
 
         suspend fun sendGroupInfo(groupProfile : GroupProfile)
 

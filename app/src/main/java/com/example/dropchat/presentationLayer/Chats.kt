@@ -13,7 +13,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -33,13 +32,10 @@ import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.dropchat.R
-import com.example.dropchat.dataLayer.remote.LastMessage
 import com.example.dropchat.dataLayer.remote.Profile
 import com.example.dropchat.ui.Screens
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.util.logging.Logger.global
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,7 +51,7 @@ fun Chats(mainViewModel: MainViewModel,nav: NavHostController) {
 
     Column {
         TopAppBar(title = {
-            Text(text = "Chats")
+            Text(text = "Home")
                           },
            colors =  TopAppBarDefaults.smallTopAppBarColors(
                 containerColor = Color.LightGray
@@ -75,31 +71,7 @@ fun Chats(mainViewModel: MainViewModel,nav: NavHostController) {
         LazyColumn() {
 
 
-            //Approach 
-
-            items(mainViewModel.listOfAllUsers.value) {
-
-                Log.e("ABC", "Inside Chat Screen")
-
-                mainViewModel.friendUserId.value = it.userMail
-
-
-                if (mainViewModel.chatExist.value) {
-                Log.e("ABC", "Inside Chat Screen -> chatExist.value")
-
-                    scope.launch(Dispatchers.IO)
-                    {
-                        mainViewModel.getMessages()
-                    Log.e("ABC", "Inside Chat Screen -> getMessages()")
-
-                        mainViewModel.lastMessage.value =
-                            mainViewModel.listOfMessages.value.Messages.last().message
-                    }
-
-
-                    chatCard(it, mainViewModel, nav, mainViewModel.lastMessage.value)
-                }
-            }
+        }
         }
 
 
@@ -134,9 +106,9 @@ fun Chats(mainViewModel: MainViewModel,nav: NavHostController) {
             }
         }
     }
-}
+
 @Composable
-fun chatCard(profile : Profile, mainViewModel: MainViewModel,nav: NavHostController, lastMessage: String) {
+fun ChatCard(profile : Profile, mainViewModel: MainViewModel,nav: NavHostController, lastMessage: String) {
     Card(
         modifier = Modifier.clickable {
             mainViewModel.friendUserId.value = profile.userMail

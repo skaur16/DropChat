@@ -68,6 +68,14 @@ fun profileCard(profile : Profile,
     Card (
         modifier = Modifier.clickable {
             mainViewModel.friendUserId.value = profile.userMail
+
+            mainViewModel.channel.value = mainViewModel.channel.value.copy(
+            members = listOf(
+                profile.userMail,
+                mainViewModel.currentUserId.value
+            )
+            )
+
             nav.navigate(Screens.ChatScreen.name)
         }
     )

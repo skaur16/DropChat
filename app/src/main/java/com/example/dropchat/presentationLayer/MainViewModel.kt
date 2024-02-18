@@ -1,16 +1,13 @@
 package com.example.dropchat.presentationLayer
 
-import android.app.Application
-import android.app.DatePickerDialog
 import android.net.Uri
 import android.util.Log
-import android.widget.DatePicker
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.dropchat.dataLayer.remote.Channel
 import com.example.dropchat.dataLayer.remote.Gender
 import com.example.dropchat.dataLayer.remote.GroupProfile
-import com.example.dropchat.dataLayer.remote.LastMessage
 import com.example.dropchat.dataLayer.remote.Message
 import com.example.dropchat.dataLayer.remote.Messages
 import com.example.dropchat.dataLayer.remote.Profile
@@ -19,7 +16,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,6 +28,7 @@ class MainViewModel @Inject constructor(
     var message = mutableStateOf(Message())
     var listOfMessages = mutableStateOf(Messages())
     var groupProfile = mutableStateOf(GroupProfile())
+    var channel = mutableStateOf(Channel())
 
     var lastMessage = mutableStateOf("")
 
@@ -77,7 +74,8 @@ class MainViewModel @Inject constructor(
         }.await()
 
     }
-   suspend fun getMessages(){
+
+    suspend fun getMessages(){
 
 
 
@@ -87,13 +85,15 @@ class MainViewModel @Inject constructor(
                 "${friendUserId.value} and ${currentUserId.value}"
             ).also{
                 if (it != null) {
-                    listOfMessages.value = it
-                Log.e("List",it.toString())
+                    channel.value = it
                 }
-
             }
         }.await()
     }
+
+
+
+
      fun sendMessage(){
          viewModelScope.launch {
              Log.e("MSG",uniqueId)
@@ -103,6 +103,7 @@ class MainViewModel @Inject constructor(
              serverRepoRef.sendMessage(
                  "${currentUserId.value} and ${friendUserId.value}",
                  "${friendUserId.value} and ${currentUserId.value}",
+                                channel.value,
                                 message.value
                  )
          }
