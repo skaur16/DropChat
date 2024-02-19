@@ -1,13 +1,17 @@
 package com.example.dropchat.domainLayer.remote
 
+import android.util.Log
 import androidx.core.net.toUri
 import com.example.dropchat.dataLayer.remote.Channel
+import com.example.dropchat.dataLayer.remote.ChatList
 import com.example.dropchat.dataLayer.remote.GroupMessage
 import com.example.dropchat.dataLayer.remote.GroupProfile
 import com.example.dropchat.dataLayer.remote.Message
 import com.example.dropchat.dataLayer.remote.Messages
 import com.example.dropchat.dataLayer.remote.Profile
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -196,6 +200,25 @@ class ServerRepoImpl : ServerRepo {
             return true
         }
         else return doc2.exists()
+
+
+    }
+
+    override suspend fun chatList(currentUserId : String)  : List<Channel>? {
+
+              return db.collection("Chats")
+            .whereArrayContains("members",currentUserId)
+             .get()
+                  .addOnSuccessListener {
+                      Log.e("Success",it.documents.toString())
+                  }
+                .await()
+                  .toObjects(Channel::class.java)
+
+
+
+
+
 
 
     }

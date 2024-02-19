@@ -32,6 +32,7 @@ import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.dropchat.R
+import com.example.dropchat.dataLayer.remote.Channel
 import com.example.dropchat.dataLayer.remote.Profile
 import com.example.dropchat.ui.Screens
 import kotlinx.coroutines.Dispatchers
@@ -69,8 +70,15 @@ fun Chats(mainViewModel: MainViewModel,nav: NavHostController) {
             )
 
         LazyColumn() {
+            scope.launch (Dispatchers.IO) {
+                mainViewModel.chatList()
+                Log.e("CHATS", "chal gya")
 
-
+                items(mainViewModel.chatList.value) {
+                    Log.e("CH", it.toString())
+                    ChatCard(it, mainViewModel, nav)
+                }
+            }
         }
         }
 
@@ -108,29 +116,28 @@ fun Chats(mainViewModel: MainViewModel,nav: NavHostController) {
     }
 
 @Composable
-fun ChatCard(profile : Profile, mainViewModel: MainViewModel,nav: NavHostController, lastMessage: String) {
+fun ChatCard(channel:Channel, mainViewModel: MainViewModel,nav: NavHostController)
+{
     Card(
         modifier = Modifier.clickable {
-            mainViewModel.friendUserId.value = profile.userMail
-
             nav.navigate(Screens.ChatScreen.name)
         }
+
     ){
         Row(){
-        Column {
-            AsyncImage(model = profile.userImage.toUri() ,
-                contentDescription = "IMG",
-                modifier = Modifier
-                    .width(40.dp)
-                    .height(40.dp)
-                )
-        }
+
             Column {
                 Row(){
-                    Text(text = profile.userName)
+                    if(channel.members[0]== mainViewModel.currentUserId.value){
+                        Text(text = channel.members[1])
+                    }
+                    else{
+                        Text(text = channel.members[0])
+                    }
                 }
+
                 Row(){
-                    Text(text=lastMessage)
+                    Text(text=channel.messages.last().message)
                 }
             }
         }

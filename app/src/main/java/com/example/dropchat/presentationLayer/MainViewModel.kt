@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dropchat.dataLayer.remote.Channel
+import com.example.dropchat.dataLayer.remote.ChatList
 import com.example.dropchat.dataLayer.remote.Gender
 import com.example.dropchat.dataLayer.remote.GroupProfile
 import com.example.dropchat.dataLayer.remote.Message
@@ -16,6 +17,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import okhttp3.internal.toImmutableList
 import javax.inject.Inject
 
 @HiltViewModel
@@ -55,6 +57,7 @@ class MainViewModel @Inject constructor(
     var uniqueId = "${currentUserId.value} and ${friendUserId.value}"
     var uniqueIdReverse = "${friendUserId.value} and ${currentUserId.value}"
     var chatExist = mutableStateOf<Boolean>(false)
+    var chatList = mutableStateOf(mutableListOf(Channel()))
 
 
     fun sendProfile() {
@@ -128,5 +131,13 @@ class MainViewModel @Inject constructor(
             }
         }
     }
-}
+
+    suspend fun chatList(){
+       val x =  viewModelScope.async { serverRepoRef.chatList(currentUserId.value)?.toList() }.await()
+        if(x!=null){
+            chatList.value = x as MutableList<Channel>
+        }
+    }
+    }
+
 

@@ -1,6 +1,8 @@
 package com.example.dropchat.domainLayer.remote
 
+import androidx.room.Query
 import com.example.dropchat.dataLayer.remote.Channel
+import com.example.dropchat.dataLayer.remote.ChatList
 import com.example.dropchat.dataLayer.remote.GroupMessage
 import com.example.dropchat.dataLayer.remote.GroupProfile
 import com.example.dropchat.dataLayer.remote.Message
@@ -27,5 +29,7 @@ interface ServerRepo {
         suspend fun getGroupMessages(groupName : String) : GroupMessage?
 
         suspend fun chatExist(uniqueId : String, uniqueIdReverse : String) : Boolean
+
+        suspend fun chatList(currentUserId : String) : List<Channel>?
 
 }
