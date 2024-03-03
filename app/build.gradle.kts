@@ -104,18 +104,6 @@ dependencies {
 
 
     //dagger
-   // implementation ("com.google.dagger:hilt-android:2.50")
-//    ksp ("com.google.dagger:hilt-compiler:2.50")
-//
-//    // For instrumentation tests
-//    androidTestImplementation  ("com.google.dagger:hilt-android-testing:2.50")
-//    kspAndroidTest ("com.google.dagger:hilt-compiler:2.50")
-//
-//    // For local unit tests
-//    testImplementation ("com.google.dagger:hilt-android-testing:2.50")
-//    kspTest (" com.google.dagger:hilt-compiler:2.50")
-
-
     implementation("com.google.dagger:hilt-android:2.50")
     kapt("com.google.dagger:hilt-android-compiler:2.50")
 

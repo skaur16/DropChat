@@ -13,6 +13,7 @@ import com.example.dropchat.dataLayer.remote.Message
 import com.example.dropchat.dataLayer.remote.Messages
 import com.example.dropchat.dataLayer.remote.Profile
 import com.example.dropchat.domainLayer.remote.ServerRepo
+import com.example.dropchat.ui.Screens
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -58,6 +59,18 @@ class MainViewModel @Inject constructor(
     var uniqueIdReverse = "${friendUserId.value} and ${currentUserId.value}"
     var chatExist = mutableStateOf<Boolean>(false)
     var chatList = mutableStateOf(mutableListOf(Channel()))
+
+    var startScreen = mutableStateOf(Screens.MainActivity)
+
+    fun startScreen(share:SharedPref) : String{
+
+        if(share.Mail != null){
+            return Screens.ListOfAllUsers.name
+        }
+        else{
+            return Screens.MainActivity.name
+        }
+    }
 
 
     fun sendProfile() {

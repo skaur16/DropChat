@@ -1,6 +1,7 @@
 package com.example.dropchat
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -27,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavHostController
@@ -38,6 +40,7 @@ import com.example.dropchat.presentationLayer.Chats
 import com.example.dropchat.presentationLayer.GroupProfile
 import com.example.dropchat.presentationLayer.ListOfAllUsers
 import com.example.dropchat.presentationLayer.MainViewModel
+import com.example.dropchat.presentationLayer.SharedPref
 import com.example.dropchat.presentationLayer.UserInfo
 //import androidx.hilt.navigation.compose.hiltViewModel
 //import com.example.dropchat.presentationLayer.MainViewModel_HiltModules
@@ -53,6 +56,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     val mainViewModel: MainViewModel by viewModels()
+
+
 
     val pickImage = registerForActivityResult(ActivityResultContracts.PickVisualMedia())
     {
@@ -81,6 +86,11 @@ class MainActivity : ComponentActivity() {
         registerLoginLauncher()
         setContent {
 
+            val context : Context = LocalContext.current
+            var shared = SharedPref(context)
+
+
+
             DropChatTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -90,12 +100,17 @@ class MainActivity : ComponentActivity() {
 
 
                     val nav = rememberNavController()
-                    NavHost(navController = nav, startDestination = Screens.MainActivity.name) {
+                    NavHost(
+                        navController = nav,
+                        startDestination = mainViewModel.startScreen(shared)
+                    )
+                    {
                         composable(Screens.MainActivity.name) {
                             App(
                                 ::launchLoginFlow,
                                 mainViewModel,
-                                nav
+                                nav,
+                                shared
                             )
                         }
                         composable(Screens.UserProfile.name) {
@@ -165,7 +180,8 @@ class MainActivity : ComponentActivity() {
 fun App(
     launcherLoginFlow: (() -> Unit) -> Unit,
     mainViewModel: MainViewModel,
-    nav: NavHostController
+    nav: NavHostController,
+    shared : SharedPref
 ) {
 
     Column() {
@@ -203,10 +219,22 @@ fun App(
                     mainViewModel.name.value = user?.displayName.toString()
                     mainViewModel.currentUserId.value = user?.email.toString()
 
+
+                    shared.Name = user?.displayName
+                    shared.Mail = user?.email
+
+
+
+
                     nav.navigate(Screens.UserProfile.name)
 
 
+
                 }
+
+
+
+
             }) {
                 /*Box(
                     modifier = Modifier.border(2.dp, color = Color.Red, shape = RectangleShape)
